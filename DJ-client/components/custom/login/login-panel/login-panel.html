@@ -1,0 +1,59 @@
+<link rel="import" href="../../../base/polymer/polymer.html">
+<link rel="import" href="../../../base/paper-input/paper-input.html">
+<link rel="import" href="../../../base/paper-button/paper-button.html">
+<link rel="import" href="../login-auth/login-auth.html">
+
+<polymer-element name="login-panel">
+	<template>
+		<style>
+		div.container {
+			background-color: white;
+			border-radius: 10px;
+			padding: 20px;
+		}
+		
+		div.input-footer #btn-login {
+			background: #4285f4;
+			color: #fff;
+		}
+
+		div.input-footer #btn-login:hover {
+			background: #2a56c6;
+		}
+		</style>
+		
+		<div class="container">
+			<div class="login-box">
+				<div class="input-content">
+					<paper-input id="username" label="Username"></paper-input>
+					<paper-input id="password" type="password" label="Password"></paper-input>
+				</div>
+				
+				<div class="input-footer" horizontal end-justified layout>
+					<paper-button id="btn-login" label="Login" on-click="{{authenticate}}"></paper-button>
+				</div>
+			</div>
+			
+			<login-auth id="login_auth"></login-auth>
+		</div>
+	</template>
+	
+	<script>
+	Polymer({
+		// Authenticate a user.
+		authenticate: function() {
+			var login_auth = this.$.login_auth;
+			var username = this.$.username.value;
+			var password = this.$.password.value;
+			login_auth.authenticate(
+				/* username */ username,
+				/* password */ password,
+				/* onSuccess */ this.success);
+		},
+		// Authentication
+		success: function() {
+			console.log('woohoo');
+		}
+	});
+	</script>
+</polymer-element>

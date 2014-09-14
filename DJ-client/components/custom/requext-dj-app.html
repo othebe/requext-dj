@@ -1,0 +1,31 @@
+<link rel="import" href="../base/polymer/polymer.html">
+<link rel="import" href="../base/core-animated-pages/core-animated-pages.html">
+
+<link rel="import" href="login/login-panel/login-panel.html">
+<link rel="import" href="requests/requests-container/requests-container.html">
+
+<polymer-element name="requext-dj-app">
+	<template>
+		<style>
+			#content {
+				background: url(../../samples/images/bg.jpg) no-repeat;
+				background-size: cover;
+				height: 100%
+			}
+		</style>
+		
+		<core-animated-pages id="content" selected="0">
+			<section horizontal center-justified layout center>
+				<login-panel></login-panel>
+			</section>
+			
+			<section>
+				<requests-container></requests-container>
+			</section>
+		</core-animated-pages>
+	</template>
+	
+	<script>
+	Polymer({});
+	</script>
+</polymer-element>
