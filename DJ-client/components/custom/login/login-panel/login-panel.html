@@ -3,7 +3,7 @@
 <link rel="import" href="../../../base/paper-button/paper-button.html">
 <link rel="import" href="../login-auth/login-auth.html">
 
-<polymer-element name="login-panel">
+<polymer-element name="login-panel" attributes="authenticated">
 	<template>
 		<style>
 		div.container {
@@ -40,6 +40,9 @@
 	
 	<script>
 	Polymer({
+		created: function() {
+			this.authenticated = false;
+		},
 		// Authenticate a user.
 		authenticate: function() {
 			var login_auth = this.$.login_auth;
@@ -48,11 +51,11 @@
 			login_auth.authenticate(
 				/* username */ username,
 				/* password */ password,
-				/* onSuccess */ this.success);
+				/* onSuccess */ this.success.bind(this));
 		},
-		// Authentication
+		// Authentication success handler.
 		success: function() {
-			console.log('woohoo');
+			this.authenticated = true;
 		}
 	});
 	</script>

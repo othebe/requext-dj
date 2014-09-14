@@ -1,11 +1,44 @@
 <link rel="import" href="../../../base/polymer/polymer.html">
+<link rel="import" href="../../../base/core-header-panel/core-header-panel.html">
+<link rel="import" href="../../../base/core-toolbar/core-toolbar.html">
+<link rel="import" href="../../../base/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../base/paper-item/paper-item.html">
+
+<link rel="import" href="../../../custom/requests/requests-tabs/requests-tabs.html">
 
 <polymer-element name="requests-container">
 	<template>
-		<div>HELLO</div>
+		<style>
+			#header-panel {
+				height: 100%;
+			}
+			
+			#header {
+				background: #0F0F0C;
+				color: white;
+			}
+			
+			paper-menu-button::shadow .paper-menu-button-overlay-bg,
+			paper-item::content .core-selected { 	
+				background: white; 
+			}
+		</style>
+		
+		<core-header-panel id="header-panel" style="height:100%">
+			<core-toolbar id="header">
+				<paper-menu-button icon="menu" isToggle="false">
+					<paper-item label="Logout" isToggle="false"></paper-item>
+				</paper-menu-button>
+				<div >Requext</div>
+			</core-toolbar>
+			
+			<requests-tabs id="tabs"></requests-tabs>
+		</core-header-panel>
 	</template>
 	
 	<script>
-	Polymer({});
+	(function() {
+		Polymer({});
+	})();
 	</script>
 </polymer-element>

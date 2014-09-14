@@ -1,0 +1,61 @@
+<link rel="import" href="../../../base/polymer/polymer.html">
+<link rel="import" href="../../../base/paper-button/paper-button.html">
+
+<polymer-element name="requests-panel" attributes="requestId">
+	<template>
+		<style>
+			#container {
+				background: rgba(255, 255, 255, 0.5);
+				padding: 10px;
+				margin-bottom: 20px;
+			}
+			
+			::content .thumbnail {
+				height: 180px;
+				width: 180px;
+			}
+			
+			.left {
+				margin-right: 10px;
+				float: left;
+			}
+			
+			.right {
+				right: right;
+			}
+			
+			#accept {
+				background: #7FC72B;
+				color: #fff;
+				margin-right: 5px;
+			}
+			
+			#decline {
+				background: #FB4F4A;
+				color: #fff;
+			}
+		</style>
+		
+		<div id="container" horizontal layout center>
+			<div class="left">
+				<content select="img.thumbnail" class="thumbnail"></content>
+			</div>
+			
+			<div class="right">
+				<content select="h2.title"></content>
+				<content select="h3.credits"></content>
+				<div>
+					<paper-button id="accept" label="Accept" icon="check"></paper-button>
+					<paper-button id="decline" label="Decline" icon="clear"></paper-button>
+				</div>
+			</div>
+		</div>
+	</template>
+	
+	<script>
+	(function() {
+		Polymer({
+		});
+	})();
+	</script>
+</polymer-element>

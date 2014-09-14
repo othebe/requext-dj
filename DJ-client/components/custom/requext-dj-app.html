@@ -7,16 +7,16 @@
 <polymer-element name="requext-dj-app">
 	<template>
 		<style>
-			#content {
+			#page_manager {
 				background: url(../../samples/images/bg.jpg) no-repeat;
 				background-size: cover;
 				height: 100%
 			}
 		</style>
 		
-		<core-animated-pages id="content" selected="0">
+		<core-animated-pages id="page_manager" selected="0">
 			<section horizontal center-justified layout center>
-				<login-panel></login-panel>
+				<login-panel id="login_panel"></login-panel>
 			</section>
 			
 			<section>
@@ -26,6 +26,32 @@
 	</template>
 	
 	<script>
-	Polymer({});
+	(function() {
+		// Page enum.
+		const PAGES = {
+			login: 0,
+			requests: 1
+		};
+		
+		// Page manager object.
+		var PageManager = null;
+		
+		Polymer({
+			ready: function() {
+				PageManager = this.$.page_manager;
+				PageManager.selected = PAGES.requests;
+			},
+			observe: {
+				// Observe authentication status.
+				'$.login_panel.authenticated': 'handleAuthentication'
+			},
+			// Handle authentication change.
+			handleAuthentication: function(old, isAuthenticated) {
+				if (isAuthenticated) {
+					PageManager.selected = PAGES.requests;
+				}
+			}
+		});
+	})();
 	</script>
 </polymer-element>
