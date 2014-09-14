@@ -12,15 +12,33 @@
 				background-size: cover;
 				height: 100%
 			}
+			
+			#overlay {
+				background: rgba(255, 255, 255, 0.8);
+				height: 100%;
+				position: absolute;
+				width: 100%;
+				z-index: 1;
+				-webkit-transition: all 1s ease-in;
+				-moz-transition: all 1s ease-in;
+			}
+			
+			#login_panel {
+				z-index: 2;
+			}
+			
+			#requests_container {
+				z-index: 2;
+			}
 		</style>
-		
+		<div id="overlay"></div>
 		<core-animated-pages id="page_manager" selected="0">
 			<section horizontal center-justified layout center>
 				<login-panel id="login_panel"></login-panel>
 			</section>
 			
 			<section>
-				<requests-container></requests-container>
+				<requests-container id="requests_container"></requests-container>
 			</section>
 		</core-animated-pages>
 	</template>
@@ -39,7 +57,7 @@
 		Polymer({
 			ready: function() {
 				PageManager = this.$.page_manager;
-				PageManager.selected = PAGES.requests;
+				PageManager.selected = PAGES.login;
 			},
 			observe: {
 				// Observe authentication status.
@@ -48,6 +66,11 @@
 			// Handle authentication change.
 			handleAuthentication: function(old, isAuthenticated) {
 				if (isAuthenticated) {
+					// Remove overlay.
+					var overlay = this.$.overlay;
+					overlay.style.opacity = 0;
+					overlay.style.zIndex = 0;
+					
 					PageManager.selected = PAGES.requests;
 				}
 			}

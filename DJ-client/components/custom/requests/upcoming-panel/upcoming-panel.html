@@ -1,7 +1,7 @@
 <link rel="import" href="../../../base/polymer/polymer.html">
 <link rel="import" href="../../../base/paper-button/paper-button.html">
 
-<polymer-element name="requests-panel" attributes="request">
+<polymer-element name="upcoming-panel" attributes="requestId">
 	<template>
 		<style>
 			#container {
@@ -45,8 +45,8 @@
 			</div>
 			
 			<div>
-				<paper-button id="accept" label="Accept" icon="check"></paper-button>
-				<paper-button id="decline" label="Decline" icon="clear"></paper-button>
+				<paper-button id="accept" label="Done" icon="check"></paper-button>
+				<paper-button id="decline" label="Cancel" icon="clear"></paper-button>
 			</div>
 		</div>
 	</template>
@@ -54,10 +54,6 @@
 	<script>
 	(function() {
 		Polymer({
-			sendToQueue: function() {
-				// TODO: Post to upcoming endpoint.
-				
-			}
 		});
 	})();
 	</script>

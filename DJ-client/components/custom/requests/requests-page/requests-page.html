@@ -1,5 +1,7 @@
 <link rel="import" href="../../../base/polymer/polymer.html">
+<link rel="import" href="../../../base/core-tooltip/core-tooltip.html">
 <link rel="import" href="../../../base/core-ajax/core-xhr.html">
+<link rel="import" href="../../../base/paper-fab/paper-fab.html">
 
 <link rel="import" href="../../../custom/requests/requests-panel/requests-panel.html">
 
@@ -8,6 +10,12 @@
 		<style>
 			#request-list {
 				padding: 20px;
+			}
+			
+			#refresher {
+				bottom: 5%;
+				position: fixed;
+				right: 5%;
 			}
 		</style>
 		
@@ -24,11 +32,15 @@
 				</requests-panel>
 			</template>
 		</div>
+		
+		<core-tooltip id="refresher" label="Reload all your requests.">
+			<paper-fab icon="refresh"></paper-fab>
+		</core-tooltip>
 	</template>
 	
 	<script>
 	(function() {
-		var POLL_TIMER = 10000;
+		var POLL_TIMER = 10000000;
 		
 		Polymer({
 			created: function() {
@@ -37,9 +49,9 @@
 			ready: function() {
 				var ref = this;
 				this.requests = this.getRequests();
-				//setInterval(function() {
+				setInterval(function() {
 					ref.getRequests();
-				//}, POLL_TIMER);
+				}, POLL_TIMER);
 			},
 			getRequests: function() {
 				var ref = this;

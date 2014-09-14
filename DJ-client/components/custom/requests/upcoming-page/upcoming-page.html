@@ -1,16 +1,74 @@
 <link rel="import" href="../../../base/polymer/polymer.html">
+<link rel="import" href="../../../base/core-ajax/core-xhr.html">
+<link rel="import" href="../../../base/paper-fab/paper-fab.html">
 
-<polymer-element name="upcoming-page">
+<link rel="import" href="../../../custom/requests/upcoming-panel/upcoming-panel.html">
+
+<polymer-element name="upcoming-page" attributes="requests queue">
 	<template>
 		<style>
+			#request-list {
+				padding: 20px;
+			}
+			
+			#refresher {
+				bottom: 5%;
+				position: fixed;
+				right: 5%;
+			}
 		</style>
 		
-		UPCOMING
+		<core-xhr id="xhr"></core-xhr>
+		<div id="request-list">
+			<template repeat="{{request in requests}}">
+				<upcoming-panel requestId="45">
+					<img src="{{request.thumbnail}}" class="thumbnail"></core-icon>
+					<h2 class="title">
+						{{request.title}}</br>
+						{{request.artist}}
+					</h2>
+					<h3 class="credits">{{request.credits}}</h3>
+				</upcoming-panel>
+			</template>
+		</div>
+		
+		<core-tooltip id="refresher" label="Reload all your upcoming requests.">
+			<paper-fab icon="refresh"></paper-fab>
+		</core-tooltip>
 	</template>
 	
 	<script>
 	(function() {
+		var POLL_TIMER = 10000000;
+		
 		Polymer({
+			created: function() {
+				this.requests = [];
+			},
+			ready: function() {
+				var ref = this;
+				this.requests = this.getRequests();
+				setInterval(function() {
+					ref.getRequests();
+				}, POLL_TIMER);
+			},
+			// Get an array of upcoming requests.
+			getRequests: function() {
+				var ref = this;
+				var xhr = this.$.xhr.request({
+					url: 'http://localhost:8000/samples/endpoints/upcoming.json',
+					params: {}	// TODO: Pass auth_token
+				});
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.responseText) {
+						ref.requests = JSON.parse(xhr.responseText);
+					}
+				}
+			},
+			// Queue an upcoming request.
+			queue: function(request) {
+				this.requests.push(request);
+			}
 		});
 	})();
 	</script>
