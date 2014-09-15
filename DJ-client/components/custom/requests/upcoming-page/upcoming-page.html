@@ -1,7 +1,7 @@
 <link rel="import" href="../../../base/polymer/polymer.html">
-<link rel="import" href="../../../base/core-ajax/core-xhr.html">
 <link rel="import" href="../../../base/paper-fab/paper-fab.html">
 
+<link rel="import" href="../../../custom/common/rpc-helper/rpc-helper.html">
 <link rel="import" href="../../../custom/requests/upcoming-panel/upcoming-panel.html">
 
 <polymer-element name="upcoming-page" attributes="requests queue">
@@ -18,10 +18,11 @@
 			}
 		</style>
 		
-		<core-xhr id="xhr"></core-xhr>
+		<rpc-helper id="rpc_helper"></rpc-helper>
+		
 		<div id="request-list">
 			<template repeat="{{request in requests}}">
-				<upcoming-panel requestId="45">
+				<upcoming-panel request="{{request}}">
 					<img src="{{request.thumbnail}}" class="thumbnail"></core-icon>
 					<h2 class="title">
 						{{request.title}}</br>
@@ -32,7 +33,7 @@
 			</template>
 		</div>
 		
-		<core-tooltip id="refresher" label="Reload all your upcoming requests.">
+		<core-tooltip id="refresher" label="Reload all your upcoming requests." position="left">
 			<paper-fab icon="refresh"></paper-fab>
 		</core-tooltip>
 	</template>
@@ -45,7 +46,7 @@
 			created: function() {
 				this.requests = [];
 			},
-			ready: function() {
+			domReady: function() {
 				var ref = this;
 				this.requests = this.getRequests();
 				setInterval(function() {
@@ -54,20 +55,26 @@
 			},
 			// Get an array of upcoming requests.
 			getRequests: function() {
-				var ref = this;
-				var xhr = this.$.xhr.request({
-					url: 'http://localhost:8000/samples/endpoints/upcoming.json',
-					params: {}	// TODO: Pass auth_token
-				});
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState == 4 && xhr.responseText) {
-						ref.requests = JSON.parse(xhr.responseText);
-					}
-				}
+				var xhr = this.$.rpc_helper.getUpcomingRequests(this.onGetRequestsSuccess.bind(this));
+			},
+			// Handle getRequests success.
+			onGetRequestsSuccess: function(requests) {
+				this.requests = JSON.parse(requests);
 			},
 			// Queue an upcoming request.
 			queue: function(request) {
 				this.requests.push(request);
+			},
+			// Remove a request from the queue.
+			dequeue: function(request) {
+				for (var i = 0; i < this.requests.length; i++) {
+					if (this.requests[i].request_id == request.request_id) {
+						var pre = this.requests.slice(0, i);
+						var post = this.requests.slice(i + 1, this.requests.length);
+						this.requests = pre.concat(post);
+						break;
+					}
+				}
 			}
 		});
 	})();

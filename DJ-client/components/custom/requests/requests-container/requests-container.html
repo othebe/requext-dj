@@ -4,7 +4,8 @@
 <link rel="import" href="../../../base/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../base/paper-item/paper-item.html">
 
-<link rel="import" href="../../../custom/requests/requests-tabs/requests-tabs.html">
+<link rel="import" href="../../../custom/common/auth-manager/auth-manager.html">
+<link rel="import" href="../../../custom/requests/page-manager/page-manager.html">
 
 <polymer-element name="requests-container">
 	<template>
@@ -24,21 +25,27 @@
 			}
 		</style>
 		
+		<auth-manager id="auth_manager"></auth-manager>
+
 		<core-header-panel id="header-panel" style="height:100%">
 			<core-toolbar id="header">
 				<paper-menu-button icon="menu" isToggle="false">
-					<paper-item label="Logout" isToggle="false"></paper-item>
+					<paper-item label="Logout" isToggle="false" on-click="{{logout}}"></paper-item>
 				</paper-menu-button>
 				<div >Requext</div>
 			</core-toolbar>
 			
-			<requests-tabs id="tabs"></requests-tabs>
+			<page-manager></page-manager>
 		</core-header-panel>
 	</template>
 	
 	<script>
 	(function() {
-		Polymer({});
+		Polymer({
+			logout: function() {
+				this.$.auth_manager.setAuthData(null);
+			}
+		});
 	})();
 	</script>
 </polymer-element>

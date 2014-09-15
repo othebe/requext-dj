@@ -1,7 +1,9 @@
 <link rel="import" href="../../../base/polymer/polymer.html">
 <link rel="import" href="../../../base/paper-input/paper-input.html">
 <link rel="import" href="../../../base/paper-button/paper-button.html">
-<link rel="import" href="../login-auth/login-auth.html">
+
+<link rel="import" href="../../common/rpc-helper/rpc-helper.html">
+<link rel="import" href="../../common/auth-manager/auth-manager.html">
 
 <polymer-element name="login-panel" attributes="authenticated">
 	<template>
@@ -22,6 +24,9 @@
 		}
 		</style>
 		
+		<rpc-helper id="rpc_helper"></rpc-helper>
+		<auth-manager id="auth_manager"></auth-manager>
+		
 		<div class="container">
 			<div class="login-box">
 				<div class="input-content">
@@ -33,8 +38,6 @@
 					<paper-button id="btn-login" label="Login" on-click="{{authenticate}}"></paper-button>
 				</div>
 			</div>
-			
-			<login-auth id="login_auth"></login-auth>
 		</div>
 	</template>
 	
@@ -45,16 +48,16 @@
 		},
 		// Authenticate a user.
 		authenticate: function() {
-			var login_auth = this.$.login_auth;
 			var username = this.$.username.value;
 			var password = this.$.password.value;
-			login_auth.authenticate(
+			this.$.rpc_helper.authenticate(
 				/* username */ username,
 				/* password */ password,
-				/* onSuccess */ this.success.bind(this));
+				/* onSuccess */ this.onSuccess.bind(this));
 		},
 		// Authentication success handler.
-		success: function() {
+		onSuccess: function(authData) {
+			this.$.auth_manager.setAuthData(authData);
 			this.authenticated = true;
 		}
 	});

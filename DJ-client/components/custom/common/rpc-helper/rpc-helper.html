@@ -1,0 +1,105 @@
+<link rel="import" href="../../../base/polymer/polymer.html">
+<link rel="import" href="../../../base/core-ajax/core-xhr.html">
+
+<link rel="import" href="../../../custom/common/auth-manager/auth-manager.html">
+
+<polymer-element name="rpc-helper">
+	<template>
+		<auth-manager id="auth_manager"></auth-manager>
+		<core-xhr id="xhr"></core-xhr>
+	</template>
+	
+	<script>
+	(function() {
+		const SERVER = 'http://localhost:8000/samples/endpoints/';
+		const ENDPOINT = {
+			// Authenticate a user.
+			authenticate: SERVER + 'auth.json',
+			// Get requests.
+			get_requests: SERVER + 'requests.json',
+			// Get upcoming requests.
+			get_upcoming_requests: SERVER + 'upcoming.json',
+			// Post request details.
+			post_request_details: SERVER + 'request_details.json',
+			// Post upcoming request details.
+			post_upcoming_request_details: SERVER + 'upcoming_request_details.json'
+		}
+		
+		var AuthManager = null;
+		
+		Polymer({
+			publish: {
+				authenticate: this.authenticate,
+				getRequests: this.getRequests
+			},
+			ready: function() {
+				AuthManager = this.$.auth_manager;
+			},
+			// Authenticate user.
+			authenticate: function(username, password, onSuccess) {
+				var xhr = this.$.xhr.request({
+					url: ENDPOINT.authenticate,
+					params: {username:username, password:password}
+				});
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.responseText) {
+						if (onSuccess) onSuccess(xhr.responseText);
+					}
+				}
+			},
+			// Get requests.
+			getRequests: function(onSuccess) {
+				var authToken = AuthManager.getAuthToken();
+				var xhr = this.$.xhr.request({
+					url: ENDPOINT.get_requests,
+					params: {auth_token: authToken}
+				});
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.responseText) {
+						if (onSuccess) onSuccess(xhr.responseText);
+					}
+				}
+			},
+			// Get upcoming requests.
+			getUpcomingRequests: function(onSuccess) {
+				var authToken = AuthManager.getAuthToken();
+				var xhr = this.$.xhr.request({
+					url: ENDPOINT.get_upcoming_requests,
+					params: {auth_token: authToken}
+				});
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.responseText) {
+						if (onSuccess) onSuccess(xhr.responseText);
+					}
+				}
+			},
+			// Post request details.
+			postRequestDetails: function(data, onSuccess) {
+				var authToken = AuthManager.getAuthToken();
+				var xhr = this.$.xhr.request({
+					url: ENDPOINT.post_request_details,
+					params: {data: data, auth_token: authToken}
+				});
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.responseText) {
+						if (onSuccess) onSuccess(xhr.responseText);
+					}
+				}
+			},
+			// Post request details.
+			postUpcomingRequestDetails: function(data, onSuccess) {
+				var authToken = AuthManager.getAuthToken();
+				var xhr = this.$.xhr.request({
+					url: ENDPOINT.post_upcoming_request_details,
+					params: {data: data, auth_token: authToken}
+				});
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 && xhr.responseText) {
+						if (onSuccess) onSuccess(xhr.responseText);
+					}
+				}
+			}
+		});
+	})();
+	</script>
+</polymer-element>

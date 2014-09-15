@@ -1,0 +1,51 @@
+<link rel="import" href="../../../base/polymer/polymer.html">
+
+<polymer-element name="event-manager">
+	<template></template>
+	<script>
+	(function() {
+		const EVENTS = {
+			AuthChangeEvent: 'auth-change-event',
+			RequestAcceptEvent: 'request-accept-event',
+			RequestDeclineEvent: 'request-decline-event'
+		};
+		
+		Polymer({
+			publish: {
+				addAuthChangeEventhandler: this.addAuthChangeEventHandler,
+				fireAuthChangeEvent: this.fireAuthChangeEvent
+			},
+			// Fire authentication change event.
+			fireAuthChangeEvent: function(src, data) {
+				src.fire(EVENTS.AuthChangeEvent, {data: data});
+			},
+			// Add handler for authentication change event.
+			addAuthChangeEventHandler: function(listener, callback) {
+				listener.addEventListener(EVENTS.AuthChangeEvent, function(e) {
+					callback(e.detail.data);
+				});
+			},
+			// Fire request accept event.
+			fireRequestAcceptEvent: function(src, data) {
+				src.fire(EVENTS.RequestAcceptEvent, {data: data});
+			},
+			// Add handler for request accept event.
+			addRequestAcceptEvent: function(listener, callback) {
+				listener.addEventListener(EVENTS.RequestAcceptEvent, function(e) {
+					callback(e.detail.data);
+				});
+			},
+			// Fire request decline event.
+			fireRequestDeclineEvent: function(src, data) {
+				src.fire(EVENTS.RequestDeclineEvent, {data: data});
+			},
+			// Add handler for request decline event.
+			addRequestDeclineEvent: function(listener, callback) {
+				listener.addEventListener(EVENTS.RequestDeclineEvent, function(e) {
+					callback(e.detail.data);
+				});
+			}
+		});
+	})();
+	</script>
+</polymer-element>

@@ -1,6 +1,8 @@
 <link rel="import" href="../base/polymer/polymer.html">
 <link rel="import" href="../base/core-animated-pages/core-animated-pages.html">
 
+<link rel="import" href="common/auth-manager/auth-manager.html">
+<link rel="import" href="common/event-manager/event-manager.html">
 <link rel="import" href="login/login-panel/login-panel.html">
 <link rel="import" href="requests/requests-container/requests-container.html">
 
@@ -12,27 +14,14 @@
 				background-size: cover;
 				height: 100%
 			}
-			
-			#overlay {
-				background: rgba(255, 255, 255, 0.8);
-				height: 100%;
-				position: absolute;
-				width: 100%;
-				z-index: 1;
-				-webkit-transition: all 1s ease-in;
-				-moz-transition: all 1s ease-in;
-			}
-			
-			#login_panel {
-				z-index: 2;
-			}
-			
-			#requests_container {
-				z-index: 2;
-			}
 		</style>
+		
 		<div id="overlay"></div>
-		<core-animated-pages id="page_manager" selected="0">
+		
+		<auth-manager id="auth_manager"></auth-manager>
+		<event-manager id="event_manager"></event-manager>
+		
+		<core-animated-pages id="page_manager" selected="{{activePage}}">
 			<section horizontal center-justified layout center>
 				<login-panel id="login_panel"></login-panel>
 			</section>
@@ -51,27 +40,27 @@
 			requests: 1
 		};
 		
-		// Page manager object.
-		var PageManager = null;
+		// Authentication manager.
+		var AuthManager = null;
+		// Event manager.
+		var EventManager = null;
 		
 		Polymer({
-			ready: function() {
-				PageManager = this.$.page_manager;
-				PageManager.selected = PAGES.login;
+			created: function() {
 			},
-			observe: {
-				// Observe authentication status.
-				'$.login_panel.authenticated': 'handleAuthentication'
+			domReady: function() {
+				AuthManager = this.$.auth_manager;
+				EventManager = this.$.event_manager;
+				
+				EventManager.addAuthChangeEventHandler(this, this.onAuthChange.bind(this));
+				
+				this.activePage = AuthManager.getAuthToken() ? PAGES.requests : PAGES.login;
 			},
-			// Handle authentication change.
-			handleAuthentication: function(old, isAuthenticated) {
-				if (isAuthenticated) {
-					// Remove overlay.
-					var overlay = this.$.overlay;
-					overlay.style.opacity = 0;
-					overlay.style.zIndex = 0;
-					
-					PageManager.selected = PAGES.requests;
+			onAuthChange: function(data) {
+				if (data != null && data.auth_token) {
+					this.activePage = PAGES.requests;
+				} else {
+					window.location.reload();
 				}
 			}
 		});

@@ -1,0 +1,102 @@
+<link rel="import" href="../../../base/polymer/polymer.html">
+<link rel="import" href="../../../base/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../base/paper-tabs/paper-tab.html">
+
+<link rel="import" href="../../common/event-manager/event-manager.html">
+<link rel="import" href="../../common/rpc-helper/rpc-helper.html">
+<link rel="import" href="../requests-page/requests-page.html">
+<link rel="import" href="../upcoming-page/upcoming-page.html">
+
+<polymer-element name="page-manager">
+	<template>
+		<style>
+			#tabs {
+				background-color: white;
+				color: black;
+			}
+			paper-tab.core-selected {
+				background-color: #FFFBF4;
+			}
+		</style>
+		
+		<event-manager id="event_manager"></event-manager>
+		<rpc-helper id="rpc_helper"></rpc-helper>
+		
+		<paper-tabs id="tabs" selected="0">
+			<paper-tab on-click="{{loadRequests}}">Requests</paper-tab>
+			<paper-tab on-click="{{loadUpcoming}}">Upcoming</paper-tabs>
+		</paper-tabs>
+		
+		<core-animated-pages id="page_manager">
+			<section>
+				<requests-page id="requests_page"></requests-page>
+			</section>
+			
+			<section>
+				<upcoming-page id="upcoming_page"></upcoming-page>
+			</section>
+		</core-animated-pages>
+	</template>
+	
+	<script>
+	(function() {
+		// Available tabs.
+		const TABS = {
+			requests: 0,
+			upcoming: 1
+		};
+		
+		var EventManager = null;
+		var RPCHelper = null;
+		
+		var PageManager = null;
+		var RequestsPage = null;
+		var UpcomingPage = null;
+		
+		Polymer({
+			domReady: function() {
+				EventManager = this.$.event_manager;
+				RPCHelper = this.$.rpc_helper;
+				PageManager = this.$.page_manager;
+				RequestsPage = this.$.requests_page;
+				UpcomingPage = this.$.upcoming_page;
+				
+				// Listen to events on the requests page.
+				EventManager.addRequestAcceptEvent(RequestsPage, this.onRequestAcceptEvent.bind(this));
+				EventManager.addRequestDeclineEvent(RequestsPage, this.onRequestDeclineEvent.bind(this));
+				
+				// Listen to events on the upcoming requests page.
+				EventManager.addRequestAcceptEvent(UpcomingPage, this.onUpcomingRequestAcceptEvent.bind(this));
+				EventManager.addRequestDeclineEvent(UpcomingPage, this.onUpcomingRequestDeclineEvent.bind(this));
+			},
+			loadRequests: function() {
+				PageManager.selected = TABS.requests;
+			},
+			loadUpcoming: function() {
+				PageManager.selected = TABS.upcoming;
+			},
+			// Handle an RequestAccept event.
+			onRequestAcceptEvent: function(data) {
+				RPCHelper.postRequestDetails({accepted: true, request: data});
+				RequestsPage.dequeue(data);
+				UpcomingPage.queue(data);
+			},
+			// Handle an RequestDecline event.
+			onRequestDeclineEvent: function(data) {
+				RPCHelper.postRequestDetails({accepted: false, request: data});
+				RequestsPage.dequeue(data);
+			},
+			// Handle an upcoming RequesstAccept event.
+			onUpcomingRequestAcceptEvent: function(data) {
+				RPCHelper.postUpcomingRequestDetails({accepted: false, request: data});
+				UpcomingPage.dequeue(data);
+			},
+			// Handle an upcoming RequesstDecline event.
+			onUpcomingRequestDeclineEvent: function(data) {
+				RPCHelper.postUpcomingRequestDetails({accepted: false, request: data});
+				UpcomingPage.dequeue(data);
+			}
+		});
+	})();
+	</script>
+</polymer-element>

@@ -1,6 +1,8 @@
 <link rel="import" href="../../../base/polymer/polymer.html">
 <link rel="import" href="../../../base/paper-button/paper-button.html">
 
+<link rel="import" href="../../../custom/common/event-manager/event-manager.html">
+
 <polymer-element name="requests-panel" attributes="request">
 	<template>
 		<style>
@@ -35,6 +37,8 @@
 			}
 		</style>
 		
+		<event-manager id="event_manager"></event-manager>
+		
 		<div id="container" vertical layout>
 			<div horizontal layout>
 				<content select="img.thumbnail" class="thumbnail"></content>
@@ -45,18 +49,27 @@
 			</div>
 			
 			<div>
-				<paper-button id="accept" label="Accept" icon="check"></paper-button>
-				<paper-button id="decline" label="Decline" icon="clear"></paper-button>
+				<paper-button id="accept" label="Accept" icon="check" on-click="{{sendToUpcomingQueue}}"></paper-button>
+				<paper-button id="decline" label="Decline" icon="clear" on-click="{{decline}}"></paper-button>
 			</div>
 		</div>
 	</template>
 	
 	<script>
 	(function() {
+		var EventManager = null;
+		
 		Polymer({
-			sendToQueue: function() {
-				// TODO: Post to upcoming endpoint.
-				
+			ready: function() {
+				EventManager = this.$.event_manager;
+			},
+			// Accept a request and add it to the upcoming queue.
+			sendToUpcomingQueue: function() {
+				EventManager.fireRequestAcceptEvent(this, this.request);
+			},
+			// Decline a request.
+			decline: function() {
+				EventManager.fireRequestDeclineEvent(this, this.request);
 			}
 		});
 	})();

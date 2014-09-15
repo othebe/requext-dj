@@ -1,7 +1,9 @@
 <link rel="import" href="../../../base/polymer/polymer.html">
 <link rel="import" href="../../../base/paper-button/paper-button.html">
 
-<polymer-element name="upcoming-panel" attributes="requestId">
+<link rel="import" href="../../../custom/common/event-manager/event-manager.html">
+
+<polymer-element name="upcoming-panel" attributes="request">
 	<template>
 		<style>
 			#container {
@@ -35,6 +37,8 @@
 			}
 		</style>
 		
+		<event-manager id="event_manager"></event-manager>
+		
 		<div id="container" vertical layout>
 			<div horizontal layout>
 				<content select="img.thumbnail" class="thumbnail"></content>
@@ -45,15 +49,28 @@
 			</div>
 			
 			<div>
-				<paper-button id="accept" label="Done" icon="check"></paper-button>
-				<paper-button id="decline" label="Cancel" icon="clear"></paper-button>
+				<paper-button id="accept" label="Done" icon="check" on-click="{{acceptUpcoming}}"></paper-button>
+				<paper-button id="decline" label="Cancel" icon="clear" on-click="{{declineUpcoming}}"></paper-button>
 			</div>
 		</div>
 	</template>
 	
 	<script>
 	(function() {
+		var EventManager = null;
+		
 		Polymer({
+			domReady: function() {
+				EventManager = this.$.event_manager;
+			},
+			// Accept upcoming requests.
+			acceptUpcoming: function() {
+				EventManager.fireRequestAcceptEvent(this, this.request);
+			},
+			// Decline upcoming requests.
+			declineUpcoming: function() {
+				EventManager.fireRequestAcceptEvent(this, this.request);
+			}
 		});
 	})();
 	</script>

@@ -1,0 +1,44 @@
+<link rel="import" href="../../../base/polymer/polymer.html">
+<link rel="import" href="../../../base/core-localstorage/core-localstorage.html">
+
+<link rel="import" href="../../../custom/common/event-manager/event-manager.html">
+
+<polymer-element name="auth-manager" attributes="getAuthToken setAuthData">
+	<template>
+		<core-localstorage id="store" name="requext-dj-storage" value="{{authData}}"></core-localstorage>
+		<event-manager id="event_manager"></event-manager>
+	</template>
+	
+	<script>
+	(function() {
+		var Store = null;
+		var EventManager = null;
+		
+		Polymer({
+			created: function() {
+				this.authToken = null;
+			},
+			domReady: function() {
+				Store = this.$.store;
+				EventManager = this.$.event_manager;
+			},
+			// Get authentication token.
+			getAuthToken: function() {
+				if (Store) {
+					var authData = Store.value;
+					if (authData) {
+						return authData.auth_token;
+					}
+				}
+			},
+			// Set authentication data.
+			setAuthData: function(authData) {
+				var parsed = authData == null ? null : JSON.parse(authData);
+				Store.value = parsed;
+				
+				EventManager.fireAuthChangeEvent(this, parsed);
+			}
+		});
+	})();
+	</script>
+</polymer-element>
