@@ -3,5 +3,5 @@
 	"title": "Die Young",
 	"artist": "Ke$ha",
 	"credits": "$7.00",
-	"thumbnail": "http://localhost:8000/samples/images/cover-01.jpg"
+	"thumbnail": "/samples/images/cover-01.jpg"
 }]

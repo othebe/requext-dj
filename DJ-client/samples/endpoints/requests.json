@@ -3,12 +3,12 @@
 	"title": "99 Problems",
 	"artist": "Jay Z",
 	"credits": "$11.00",
-	"thumbnail": "http://localhost:8000/samples/images/cover-01.jpg"
+	"thumbnail": "/samples/images/cover-01.jpg"
 },
 {
 	"request_id": 2,
 	"title": "Applause",
 	"artist": "Lady Gaga",
 	"credits": "$3.00",
-	"thumbnail": "http://localhost:8000/samples/images/cover-02.jpg"
+	"thumbnail": "/samples/images/cover-02.jpg"
 }]
